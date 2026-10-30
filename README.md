@@ -57,3 +57,11 @@
 - [Контракт интеграции ядра с Android/iOS](./docs/INTEGRATION_CONTRACT.md)
 - [Техническое задание мобильных приложений TGWS-CLODEX](https://github.com/Kust3r3nk0/TGWS-CLODEX/blob/main/docs/TECHNICAL_SPECIFICATION.md)
 
+
+## Architecture / security research (proposed)
+
+- [Architecture and design decisions](docs/ARCHITECTURE.md) (complements the formal [Technical Specification](docs/TECHNICAL_SPECIFICATION.md) and [Integration Contract](docs/INTEGRATION_CONTRACT.md))
+- [Network flows](docs/NETWORK_INTERACTIONS.md) · [Threat model](docs/SECURITY_THREAT_MODEL.md) · [Experiment plan](docs/EXPERIMENTS.md)
+- [Test matrix](docs/TEST_MATRIX.md) · [Security policy](SECURITY.md)
+
+**SPEC_ONLY:** There is **no runnable** core. The command `python3 -m unittest discover -s tests -p 'test_*.py' -v` **only validates** the design fixtures; it does not test MTProto traffic, TLS, Android, iOS or deployed relays.
