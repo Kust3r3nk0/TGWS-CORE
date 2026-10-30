@@ -1,6 +1,6 @@
 # TGWS-CORE — architecture decision record (proposed)
 
-**Snapshot:** 2026-10-30; baseline `main` commit `c2681d8950a990588b1f1b746ada83be87f03080`. **Status: proposed, not implemented.**
+> **Coordination note:** [TECHNICAL_SPECIFICATION.md](TECHNICAL_SPECIFICATION.md) is the requirements baseline and [INTEGRATION_CONTRACT.md](INTEGRATION_CONTRACT.md) owns the integration contract. The ABI outline below is a discussion sketch, not an override or competing approved interface.\n\n**Snapshot:** 2026-10-30; baseline `main` commit `c2681d8950a990588b1f1b746ada83be87f03080`. **Status: proposed, not implemented.**
 
 ## System boundaries
 
