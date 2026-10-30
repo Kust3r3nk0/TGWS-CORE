@@ -50,3 +50,10 @@
 
 ---
 *Этот README описывает целевую архитектуру; работающий прокси ещё не реализован.*
+
+## Документация проекта
+
+- [Техническое задание TGWS-CORE](./docs/TECHNICAL_SPECIFICATION.md)
+- [Контракт интеграции ядра с Android/iOS](./docs/INTEGRATION_CONTRACT.md)
+- [Техническое задание мобильных приложений TGWS-CLODEX](https://github.com/Kust3r3nk0/TGWS-CLODEX/blob/main/docs/TECHNICAL_SPECIFICATION.md)
+
