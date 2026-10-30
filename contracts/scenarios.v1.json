@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "purpose": "Design-first assertions; not proof of a runnable MTProto implementation.",
+  "cases": [
+    {
+      "id": "CORE-001",
+      "area": "listener",
+      "scenario": "A valid session binds only to loopback",
+      "input": "bind=127.0.0.1;port=1443;valid-test-secret",
+      "expected": "Local client can connect; non-loopback interface is not listening",
+      "failure": "Listener appears on 0.0.0.0 or public interface",
+      "tier": "integration"
+    },
+    {
+      "id": "CORE-002",
+      "area": "handshake",
+      "scenario": "A wrong local secret is rejected",
+      "input": "64-byte init with incorrect dummy secret",
+      "expected": "Reject and close without upstream dial; no secret in events",
+      "failure": "Any upstream dial or sensitive diagnostic",
+      "tier": "protocol"
+    },
+    {
+      "id": "CORE-003",
+      "area": "protocol",
+      "scenario": "Truncated handshake",
+      "input": "63 bytes then EOF",
+      "expected": "Bounded error and resource release",
+      "failure": "Accept, hang beyond 10s, or leak socket",
+      "tier": "protocol"
+    },
+    {
+      "id": "CORE-004",
+      "area": "transport",
+      "scenario": "Invalid TLS certificate on configured WSS peer",
+      "input": "Self-signed localhost test certificate not in trust store",
+      "expected": "Connection fails without fallback to insecure TLS",
+      "failure": "Insecure connection is accepted",
+      "tier": "integration"
+    },
+    {
+      "id": "CORE-005",
+      "area": "routing",
+      "scenario": "Manual relay-only policy with unavailable relay",
+      "input": "Mode=RELAY_ONLY;relay=unreachable local mock",
+      "expected": "No direct TCP/WSS fallback; bounded fail",
+      "failure": "Any direct route is dialed",
+      "tier": "integration"
+    },
+    {
+      "id": "CORE-006",
+      "area": "routing",
+      "scenario": "WSS fails before permitted TCP fallback",
+      "input": "WSS mock refuses; TCP mock responds",
+      "expected": "Within one deadline, attempt allowed TCP once; no payload replay",
+      "failure": "Duplicate forwarded MTProto data or forbidden path",
+      "tier": "integration"
+    },
+    {
+      "id": "CORE-007",
+      "area": "lifecycle",
+      "scenario": "Network generation changes during connection",
+      "input": "Cancel generation=1 during pending dial; start generation=2",
+      "expected": "Late generation=1 completion cannot create live session",
+      "failure": "Old socket becomes active",
+      "tier": "integration"
+    },
+    {
+      "id": "CORE-008",
+      "area": "capacity",
+      "scenario": "Concurrent sessions exceed configured cap",
+      "input": "9 local clients;max_sessions=8",
+      "expected": "At most 8 owned sessions; extra rejected or queued within bound",
+      "failure": "Resource count exceeds configured cap",
+      "tier": "load"
+    },
+    {
+      "id": "CORE-009",
+      "area": "backpressure",
+      "scenario": "Downstream receiver stalls",
+      "input": "Slow isolated mock peer; bounded queues",
+      "expected": "Memory remains bounded; stop unblocks pending writes",
+      "failure": "Unbounded growth or stuck stop",
+      "tier": "load"
+    },
+    {
+      "id": "CORE-010",
+      "area": "shutdown",
+      "scenario": "Stop while TLS handshake is stalled",
+      "input": "Local TLS peer never completes handshake",
+      "expected": "All owned sockets release; listener port reusable",
+      "failure": "Leaked descriptor or restart fails",
+      "tier": "integration"
+    },
+    {
+      "id": "CORE-011",
+      "area": "diagnostics",
+      "scenario": "Redacted event and report",
+      "input": "Dummy marker secret and credential-bearing relay URL",
+      "expected": "No marker, URL path, token, MTProto bytes in any exported event",
+      "failure": "Any dummy marker is present",
+      "tier": "unit"
+    },
+    {
+      "id": "CORE-012",
+      "area": "media",
+      "scenario": "Fragmented four-megabyte MTProto frame",
+      "input": "Local fixtures of multiple fragment sizes",
+      "expected": "Exact reconstructed bytes; max packet is enforced; no replay",
+      "failure": "Mismatched bytes, oversized accept or out-of-order stream",
+      "tier": "load"
+    },
+    {
+      "id": "CORE-013",
+      "area": "worker",
+      "scenario": "Hypothetical optional Worker rejects arbitrary destination",
+      "input": "Local stub with dst=127.0.0.1 or unknown DC",
+      "expected": "Reject before opening outbound TCP",
+      "failure": "Arbitrary destination can be dialed",
+      "tier": "future"
+    },
+    {
+      "id": "CORE-014",
+      "area": "ffi",
+      "scenario": "Double stop and stale handle",
+      "input": "Handle created, stopped twice, released, reused",
+      "expected": "Idempotent stop; stale handle is rejected without UAF",
+      "failure": "Crash, double-free or leaked handle",
+      "tier": "future"
+    }
+  ]
+}

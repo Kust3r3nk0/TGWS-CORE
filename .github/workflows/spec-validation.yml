@@ -1,0 +1,28 @@
+name: Specification validation (not core tests)
+on:
+  push:
+    paths:
+      - 'README.md'
+      - 'contracts/**'
+      - 'tests/**'
+      - 'docs/**'
+      - '.github/workflows/spec-validation.yml'
+  pull_request:
+    paths:
+      - 'README.md'
+      - 'contracts/**'
+      - 'tests/**'
+      - 'docs/**'
+      - '.github/workflows/spec-validation.yml'
+permissions:
+  contents: read
+jobs:
+  fixtures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate JSON scenarios and document disclaimers
+        run: python3 -m unittest discover -s tests -p 'test_*.py' -v
+      - name: Clarify scope
+        run: echo "SPEC ONLY - no core, no MTProto E2E, no release gate"
